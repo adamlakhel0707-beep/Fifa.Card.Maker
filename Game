@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom FIFA Card Maker</title>
+<style>
+  body {
+    background: #111;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+  }
+
+  .card-container {
+    position: relative;
+    width: 350px;
+    height: 500px;
+    margin: 20px auto;
+  }
+
+  #card {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #999;
+  }
+
+  #player-img {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+  }
+
+  #player-name {
+    position: absolute;
+    top: 280px;
+    width: 100%;
+    font-size: 22px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  #rating, #position {
+    position: absolute;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  #rating {
+    top: 20px;
+    left: 25px;
+  }
+
+  #position {
+    top: 55px;
+    left: 25px;
+  }
+
+  #club {
+    position: absolute;
+    bottom: 100px;
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .stats {
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+    width: 80%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 5px;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .stat {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #controls {
+    margin-top: 30px;
+  }
+
+  input, select, button {
+    margin: 5px;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+  }
+
+  button {
+    background: gold;
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #ffcc00;
+  }
+
+  .background-thumb {
+    width: 60px;
+    height: 80px;
+    margin: 4px;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<h1>⚽ Custom FIFA Card Maker</h1>
+
+<div class="card-container">
+  <div id="card" style="background-image:url('https://i.imgur.com/Xs4wjBl.png')">
+    <img id="player-img" src="https://i.imgur.com/7YV5D2Y.png">
+    <div id="rating">99</div>
+    <div id="position">ST</div>
+    <div id="player-name">PLAYER</div>
+    <div id="club">FC AWESOME</div>
+    <div class="stats">
+      <div class="stat" id="stat1">PAC <span>99</span></div>
+      <div class="stat" id="stat2">SHO <span>99</span></div>
+      <div class="stat" id="stat3">PAS <span>99</span></div>
+      <div class="stat" id="stat4">DRI <span>99</span></div>
+      <div class="stat" id="stat5">DEF <span>99</span></div>
+      <div class="stat" id="stat6">PHY <span>99</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="controls">
+  <input id="nameInput" placeholder="Player Name">
+  <input id="ratingInput" placeholder="Rating">
+  <input id="positionInput" placeholder="Position">
+  <input id="clubInput" placeholder="Club Name"><br>
+
+  <input type="file" id="imageUpload" accept="image/*"><br><br>
+
+  <!-- Stat labels and values -->
+  <div>
+    <input id="s1" placeholder="Label 1 (e.g. PAC)">
+    <input id="v1" placeholder="Value 1">
+    <input id="s2" placeholder="Label 2">
+    <input id="v2" placeholder="Value 2"><br>
+    <input id="s3" placeholder="Label 3">
+    <input id="v3" placeholder="Value 3">
+    <input id="s4" placeholder="Label 4">
+    <input id="v4" placeholder="Value 4"><br>
+    <input id="s5" placeholder="Label 5">
+    <input id="v5" placeholder="Value 5">
+    <input id="s6" placeholder="Label 6">
+    <input id="v6" placeholder="Value 6">
+  </div><br>
+
+  <button onclick="updateCard()">Update Card</button>
+  <button onclick="downloadCard()">Download</button>
+</div>
+
+<h3>Choose a Background:</h3>
+<div>
+  <img src="https://i.imgur.com/Xs4wjBl.png" class="background-thumb" onclick="setBackground(this.src)">
+  <img src="https://i.imgur.com/Ng8L4mr.png" class="background-thumb" onclick="setBackground(this.src)">
+  <img src="https://i.imgur.com/kbt9ph5.png" class="background-thumb" onclick="setBackground(this.src)">
+  <img src="https://i.imgur.com/o0bnVjF.png" class="background-thumb" onclick="setBackground(this.src)">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+function updateCard() {
+  document.getElementById('player-name').textContent = document.getElementById('nameInput').value || 'PLAYER';
+  document.getElementById('rating').textContent = document.getElementById('ratingInput').value || '99';
+  document.getElementById('position').textContent = document.getElementById('positionInput').value || 'ST';
+  document.getElementById('club').textContent = document.getElementById('clubInput').value || 'FC AWESOME';
+
+  for (let i = 1; i <= 6; i++) {
+    const label = document.getElementById('s' + i).value || ['PAC','SHO','PAS','DRI','DEF','PHY'][i - 1];
+    const value = document.getElementById('v' + i).value || '99';
+    document.getElementById('stat' + i).innerHTML = `${label} <span>${value}</span>`;
+  }
+}
+
+function setBackground(src) {
+  document.getElementById('card').style.backgroundImage = `url('${src}')`;
+}
+
+document.getElementById('imageUpload').addEventListener('change', function (e) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    document.getElementById('player-img').src = event.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+function downloadCard() {
+  html2canvas(document.querySelector("#card")).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'custom_fifa_card.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  });
+}
+</script>
+</body>
+</html>
+
+
